@@ -8,7 +8,7 @@
 [操作系统-内存](https://xiaolincoding.com/os/3_memory/vmem.html#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98)
 
 ### GoGC
-[9张图轻松吃透Go内存管理单元](https://mp.weixin.qq.com/s?__biz=MzA5MDEwMDYyOA==&mid=2454620147&idx=1&sn=0cf6b70a3dd47e8288701183d91649e8&chksm=87aae108b0dd681e46c2616958c0a6a8fecd9ebbd2b728ef3a1cd43e9f38e3ba5e27951e0dae&scene=21#wechat_redirect)
+[Go内存管理单元mspan](https://mp.weixin.qq.com/s?__biz=MzA5MDEwMDYyOA==&mid=2454620147&idx=1&sn=0cf6b70a3dd47e8288701183d91649e8&chksm=87aae108b0dd681e46c2616958c0a6a8fecd9ebbd2b728ef3a1cd43e9f38e3ba5e27951e0dae&scene=21#wechat_redirect)
 [堆和栈](https://cloud.tencent.com/developer/news/731210)
 [内存分配](https://juejin.cn/post/6844903795739082760)
 [GoGC](https://www.cnblogs.com/luozhiyun/p/14564903.html)
@@ -51,3 +51,15 @@
   
 #### Goroutine相比系统线程的优势
 - 轻量，高效，更好的并发控制，协程是在用户态执行，而线程的调度是在内核态。一个go协程的栈空间只占最少的内存2kb,系统线程则是MB或更多，创建、销毁、上下文切换都比系统线程快，操作系统线程上下文切换使用12k条指令，1000ns,协程切换花费2.4K指令 200ns。
+
+#### go内存
+- 内存管理单元span
+  - 由N个连续page组成，N值相同的mspan组成链表，一个mspan会被拆分成更小粒度object组成的freeList(没有next属性，内存的前8字节存储下个节点的指针)
+  - object的具体大小由sizeClass决定，sizeClass是一个映射链表（8b-32kb 67种）（sizeClass大小-object大小-由几个page组成）。
+  - mspan分成两类，需要垃圾回收和不需要垃圾回收scan/noscan, mspan的spanClass属性存储sizeClass类型和scan类型
+
+- 内存分配
+  - TCMalloc 多级内存管理。
+  - mcache:每个工作线程的独有,动态的从mcentral中申请，当对象大小小于等于32kb时，使用mcache的mspan进行分配。
+  - mcentral:所有工作线程共同享有，为mcache提供切分好的mspan资源，每个mcentral保存一种特定大小的mspan,包含已分配出去的和未分配出去的。
+  - mheap:代表程序持有的所有堆空间，当mcentral没有空闲mspan时。会想mheap申请，mheap没有时，会向操作系统申请，mheap主要用于大对象的分配，以及管理未切割的mspan。 结构：spans-bigmap-arnea:arnea区mspan的指针-标识arnea区域的信息-存放span。
