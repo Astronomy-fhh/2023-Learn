@@ -5,6 +5,7 @@
 [操作系统调度](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1.html)
 [Go调度](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html)
 [并发](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part3.html)
+[操作系统-内存](https://xiaolincoding.com/os/3_memory/vmem.html#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98)
 
 ### GoGC
 [9张图轻松吃透Go内存管理单元](https://mp.weixin.qq.com/s?__biz=MzA5MDEwMDYyOA==&mid=2454620147&idx=1&sn=0cf6b70a3dd47e8288701183d91649e8&chksm=87aae108b0dd681e46c2616958c0a6a8fecd9ebbd2b728ef3a1cd43e9f38e3ba5e27951e0dae&scene=21#wechat_redirect)
