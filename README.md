@@ -6,6 +6,9 @@
 [Go调度](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html)
 [并发](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part3.html)
 [操作系统-内存](https://xiaolincoding.com/os/3_memory/vmem.html#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98)
+[Go并发机制,多线程模式](https://www.alibabacloud.com/forum/read-916)
+[Golang 调度器 GMP 原理与调度全分析](https://learnku.com/articles/41728)
+[goroutine如何工作](https://medium.com/the-polyglot-programmer/what-are-goroutines-and-how-do-they-actually-work-f2a734f6f991)
 
 ### GoGC
 [Go内存管理单元mspan](https://mp.weixin.qq.com/s?__biz=MzA5MDEwMDYyOA==&mid=2454620147&idx=1&sn=0cf6b70a3dd47e8288701183d91649e8&chksm=87aae108b0dd681e46c2616958c0a6a8fecd9ebbd2b728ef3a1cd43e9f38e3ba5e27951e0dae&scene=21#wechat_redirect)
@@ -41,7 +44,7 @@
 - GO启动时，会为每个虚拟核心分配一个逻辑处理器P，例如一个4核处理器，每个物理内核有2个硬件线程，则GO认为有8个虚拟内核可并行执行OS线程。
 - 每个P都分配一个操作系统线程M，M代表机器，这个线程由OS管理。
 - 每个GO程序初始会有一个Goroutine(G),协程（coroutine）。Go协程可以认为应用程序级线程。
-- GO调度器有两种运行队列。全局(GRQ)本地(LRQ)，每个P都有一个LRQ。
+- GO调度器(Sched)有两种运行队列。全局(GRQ)本地(LRQ)，每个P都有一个LRQ。
 - GO调度器的实现不是抢占调度，而是协作式调度。
 - 协程状态：Waiting,Runnable,Executing。
 - 任务切换
@@ -63,3 +66,11 @@
   - mcache:每个工作线程的独有,动态的从mcentral中申请，当对象大小小于等于32kb时，使用mcache的mspan进行分配。
   - mcentral:所有工作线程共同享有，为mcache提供切分好的mspan资源，每个mcentral保存一种特定大小的mspan,包含已分配出去的和未分配出去的。
   - mheap:代表程序持有的所有堆空间，当mcentral没有空闲mspan时。会想mheap申请，mheap没有时，会向操作系统申请，mheap主要用于大对象的分配，以及管理未切割的mspan。 结构：spans-bigmap-arnea:arnea区mspan的指针-标识arnea区域的信息-存放span。
+  
+- 并行和并发
+  -操作系统中，线程是处理器调度和分配的基本单位，进程是资源所有权的基本单位。
+  -每个进程都包含私有的虚拟地址空间，代码数据和其他系统资源。
+  -每个进程至少有一个主执行线程。多个线程可在同一进程中并发运行。
+  -并发：一个时间段内有很多进程或线程在执行，但在任何时间地点只有一个进程或线程在执行，多个线程争夺时间片交替执行。
+  -并行：在同一世界段内，同一时间有多个线程或进程在执行。
+  -线程分类：用户级线程ULT,内核级线程KLT。
