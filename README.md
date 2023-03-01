@@ -81,3 +81,16 @@
   - 并发：一个时间段内有很多进程或线程在执行，但在任何时间地点只有一个进程或线程在执行，多个线程争夺时间片交替执行。
   - 并行：在同一世界段内，同一时间有多个线程或进程在执行。
   - 线程分类：用户级线程ULT,内核级线程KLT。
+---
+> chan
+- 参考：[chan源码分析](https://liangtian.me/post/go-channel/)
+- send
+  - chan已关，send会 panic: send on closed channel
+  - buff已满/无buff,没有recvq !block send会 fatal：all goroutines are asleep
+  - buff已满/无buff,没有recvq  block send会block
+- recv
+  - chan已关，buff空，recv会收到默认值 0/nil这种
+  - chan已关，buff非空，recv会收到有效值
+  - buff空,没有sendq !block recv 会 fatal：all goroutines are asleep
+  - buff空,没有sendq  block recv 会 block
+  ---
