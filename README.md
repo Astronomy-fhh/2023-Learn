@@ -94,3 +94,22 @@
   - buff空,没有sendq !block recv 会 fatal：all goroutines are asleep
   - buff空,没有sendq  block recv 会 block
   ---
+  
+  > sync.Pool 
+- 参考：[源码分析](https://www.cnblogs.com/qcrao-2018/p/12736031.html)
+- 作用：
+  - 增加临时对象的利用率，减少GC负担。
+- 原理
+  - 对于一个新创建的pool, 会创建 make([]poolLocal, GOMAXPROCS)，也就是每个P上都对应一个poolLocal
+  - poolLoacl有private, private只存一个值，shared是一个双向链表，每个双向链表项是一个循环链表，初始容量是8，*2扩容，最大是2的30次方。
+  - get元素，先拿private,如果没有 自己popHead,如果还没有 就other P popTail,如果还没有，就从victim cache中拿。
+  - push元素，private为空，则赋值，否则pushHead。
+  - 清理：STW阶段，会将local和victim交换，这样就算获取对象的速度下降了，这些对象也能保留两个GC周期。
+
+- 理念参考
+  - 原子操作代替锁，比如链表的pop push操作。
+  - 目标隔离，特点的P访问特点的Local。
+  - 行为隔离，生产者访问head,消费者访问tail。
+- 不适用：
+  - 像 socket 长连接或数据库连接池这种固定数量或强状态性的
+  ---
