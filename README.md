@@ -82,8 +82,8 @@
   - 并行：在同一世界段内，同一时间有多个线程或进程在执行。
   - 线程分类：用户级线程ULT,内核级线程KLT。
 ---
-> chan
-- 参考：[chan源码分析](https://liangtian.me/post/go-channel/)
+> channel
+- 参考：[源码分析](https://liangtian.me/post/go-channel/)
 - send
   - chan已关，send会 panic: send on closed channel
   - buff已满/无buff,没有recvq !block send会 fatal：all goroutines are asleep
