@@ -95,7 +95,7 @@
   - buff空,没有sendq  block recv 会 block
   ---
   
-  > sync.Pool 
+> sync.Pool 
 - 参考：[源码分析](https://www.cnblogs.com/qcrao-2018/p/12736031.html)
 - 作用：
   - 增加临时对象的利用率，减少GC负担。
