@@ -126,3 +126,22 @@
   - 如果一个协程等待获取锁的时间超过1ms,则被标记为饥饿状态，会追加到队列的头部，优先被唤醒。
 - 为什么有饥饿模式
   - 新到达的协程正在运行，比如自旋转中，比刚唤醒协程更容易获得锁的使用权。
+
+---
+> sync.Conc
+- 参考：[源码分析](https://www.cyhone.com/articles/golang-sync-cond/)
+- 用于等待某个条件成立后唤醒一个或一组协程。
+- 注意wait的调用一定要放在lock和unlock之间。
+- 用法
+```go
+    c.L.Lock()
+    for !condition() {
+           c.Wait()
+    }
+    ... make use of condition ...
+    c.L.Unlock()
+```
+---
+> sync.rwmutex
+- 参考：[源码分析](https://juejin.cn/post/6968853664718913543)
+- 没啥可总结的。  
