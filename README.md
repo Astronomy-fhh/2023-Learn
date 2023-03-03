@@ -149,5 +149,8 @@
 - 参考：[源码分析](https://juejin.cn/post/7005565255736639524)
 ---
 > 原子操作
+- 参考：[原子操作汇编原理+CAS+atomic.value.Store/Load](https://www.cnblogs.com/ricklz/p/13648859.html)
+---
 > 信号量
+---
 > nocopy
