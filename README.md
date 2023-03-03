@@ -144,4 +144,10 @@
 ---
 > sync.rwmutex
 - 参考：[源码分析](https://juejin.cn/post/6968853664718913543)
-- 没啥可总结的。  
+--- 
+> sync.waitgroup
+- 参考：[源码分析](https://juejin.cn/post/7005565255736639524)
+---
+> 原子操作
+> 信号量
+> nocopy
