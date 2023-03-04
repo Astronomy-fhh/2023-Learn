@@ -152,5 +152,20 @@
 - 参考：[原子操作汇编原理+CAS+atomic.value.Store/Load](https://www.cnblogs.com/ricklz/p/13648859.html)
 ---
 > 信号量
+> 参考：[源码](https://github.com/golang/sync) [源码分析](https://segmentfault.com/a/1190000039710281)
 ---
 > nocopy
+
+- 参考：[nocopy不可复制的实现](https://blog.csdn.net/yzf279533105/article/details/97640423)
+- 代码：
+```go
+type noCopy struct{}
+// Lock is a no-op used by -copylocks checker from `go vet`.
+func (*noCopy) Lock()   {}
+func (*noCopy) Unlock() {}
+```
+- 阐述：waitGroupl里有一个nocopy属性，想要自己实现，按照上面代码部分实现即可，这样包含nocopy属性的结构体，就不能复制了，编译运行都不会影响，只有go vet才会提示nocopy问题。
+---
+> go vet
+- 参考：[go vet发现的问题的示例](https://studygolang.com/articles/9619)
+- 静态代码检查，以发现可能的bug或者可以的构造。
