@@ -166,6 +166,6 @@ func (*noCopy) Unlock() {}
 ```
 - 阐述：waitGroupl里有一个nocopy属性，想要自己实现，按照上面代码部分实现即可，这样包含nocopy属性的结构体，就不能复制了，编译运行都不会影响，只有go vet才会提示nocopy问题。
 ---
-> go vet
+> go vet工具
 - 参考：[go vet发现的问题的示例](https://studygolang.com/articles/9619)
 - 静态代码检查，以发现可能的bug或者可以的构造。
