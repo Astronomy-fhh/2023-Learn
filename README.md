@@ -168,4 +168,32 @@ func (*noCopy) Unlock() {}
 ---
 > go vet工具
 - 参考：[go vet发现的问题的示例](https://studygolang.com/articles/9619)
-- 静态代码检查，以发现可能的bug或者可以的构造。
+- 静态代码检查，以发现可能的bug或者可疑的构造。
+---
+> array slice
+- 参考：[切面使用示例](https://www.geeksforgeeks.org/how-to-split-a-slice-of-bytes-in-golang/?ref=lbp) [部分源码解释](http://lifegoeson.cn/2022/01/22/golang%20slice%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6/)
+- 数组和slice的区别
+  - 数组固定长度，切片slice动态大小
+  - 如何区分
+    - var arr1 []int，无长度定义，则是Slice而且是nil slice
+    - arr2 := make([]int, 5)，make定义一定是slice
+    - arr3 := []int{}，无长度定义，则是Slice
+    - var arr4 [5]int，有长度定义，则是Array
+
+- 原理:以go v1.20
+  - array:unsafe.Pointer、len:int、cap:int 组成
+  - 容量增加：源码参考：runtime.slice.go:growslice。
+  - 如果期望容量大于翻倍后的容量：则使用期望容量。
+  - 如果期望容量小于翻倍后的容量：
+    - 如果当前容量小于256，则使用翻倍后的容量。
+    - 如果当前容量不小于256，则容量以将近1.25倍的大小增加，直到新容量大于等于期望容量 newcap += (newcap + 3*threshold) / 4。
+  - 新容量计算后，需要进行内存对齐处理，_type=1/指针大小/2的倍数、默认 有不同的实现。对齐后，确认最终的新容量。
+  
+- 其他知识：
+   - 内存对齐：内存对齐是为了提高内存读写操作的效率。计算机的内存访问通常是按照对齐单位的整数倍来进行的，如果数据没有按照对齐规则存储，就会导致内存访问时需要进行多次访问才能读取完整的数据，从而影响程序的性能。
+   - TrailingZeros64(8)： et.size 是 8，其二进制表示为 00001000，那么该函数将返回值为 3，表示末尾有 3 个零位。
+
+---
+> 值传递 引用传递
+- 参考：[值传递引用传递 slice map传递的细节](https://zhuanlan.zhihu.com/p/542218435)
+---
